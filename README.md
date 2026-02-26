@@ -25,11 +25,11 @@ bk-bake-ami-module/
 flowchart TD
     A([Caller / Root Module]) -->|passes inputs| B[module: ami_fetcher]
 
-    B --> C{Filter: ami_name_filter\ne.g. al2023-ami-2023*}
-    C --> D{Filter: architecture\nx86_64 / arm64}
+    B --> C{Filter: ami_name\ne.g. al2023-ami-2023*}
+    C --> D{Filter: ami_architecture\nx86_64 / arm64}
     D --> E{Filter: root-device-type\nebs}
     E --> F{Filter: virtualization-type\nhvm}
-    F --> G{os_type == Windows?}
+    F --> G{ami_os_type == Windows?}
 
     G -->|Yes| H["Filter: platform-details\n= 'Windows'"]
     G -->|No| I["Filter: platform-details\n= 'Linux/UNIX'"]
@@ -57,10 +57,10 @@ Fetches the latest AMI ID from AWS based on a set of filters. Supports both Linu
 
 | Variable | Description | Type | Default | Required |
 |---|---|---|---|---|
-| `ami_name_filter` | Name glob pattern for the AMI (e.g. `al2023-ami-2023*`) | `string` | — | ✅ Yes |
+| `ami_name` | Name glob pattern for the AMI (e.g. `al2023-ami-2023*`) | `string` | — | ✅ Yes |
 | `ami_owner` | AWS owner ID or alias (e.g. `amazon`) | `string` | `"amazon"` | No |
-| `architecture` | CPU architecture (`x86_64` or `arm64`) | `string` | `"x86_64"` | No |
-| `os_type` | Operating system (`Linux` or `Windows`) | `string` | `"Linux"` | No |
+| `ami_architecture` | CPU architecture (`x86_64` or `arm64`) | `string` | `"x86_64"` | No |
+| `ami_os_type` | Operating system (`Linux` or `Windows`) | `string` | `"Linux"` | No |
 
 #### Outputs
 
@@ -80,10 +80,10 @@ Fetches the latest AMI ID from AWS based on a set of filters. Supports both Linu
 module "ami_fetcher" {
   source = "git@github.com:BakeFoundry/bk-bake-ami-module.git//modules/ami_fetcher?ref=v1.0.0"
 
-  ami_name_filter = "al2023-ami-2023*-kernel-6.1-x86_64"
-  ami_owner       = "amazon"
-  architecture    = "x86_64"
-  os_type         = "Linux"
+  ami_name         = "al2023-ami-2023*-kernel-6.1-x86_64"
+  ami_owner        = "amazon"
+  ami_architecture = "x86_64"
+  ami_os_type      = "Linux"
 }
 
 output "ami_id" {
@@ -97,10 +97,10 @@ output "ami_id" {
 module "ami_fetcher" {
   source = "git@github.com:BakeFoundry/bk-bake-ami-module.git//modules/ami_fetcher?ref=v1.0.0"
 
-  ami_name_filter = "Windows_Server-2022-English-Full-Base-*"
-  ami_owner       = "amazon"
-  architecture    = "x86_64"
-  os_type         = "Windows"
+  ami_name         = "Windows_Server-2022-English-Full-Base-*"
+  ami_owner        = "amazon"
+  ami_architecture = "x86_64"
+  ami_os_type      = "Windows"
 }
 
 output "ami_id" {
@@ -116,10 +116,10 @@ The root `main.tf` calls the `ami_fetcher` module using root-level variables def
 module "ami_fetcher" {
   source = "./modules/ami_fetcher"
 
-  ami_name_filter = var.ami_name
-  ami_owner       = var.ami_owner
-  architecture    = var.ami_architecture
-  os_type         = var.ami_os_type
+  ami_name         = var.ami_name
+  ami_owner        = var.ami_owner
+  ami_architecture = var.ami_architecture
+  ami_os_type      = var.ami_os_type
 }
 ```
 
