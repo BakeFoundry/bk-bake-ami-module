@@ -21,7 +21,13 @@ variable "ami_os_type" {
   default     = "Linux"
 
   validation {
-    condition     = contains(["Linux", "Windows"], var.ami_os_type)
-    error_message = "The os_type must be either Linux or Windows."
+    condition     = contains(["linux", "windows"], lower(var.ami_os_type))
+    error_message = "The ami_os_type must be either Linux or Windows (case-insensitive)."
   }
+}
+
+variable "aws_region" {
+  description = "The AWS region to use for fetching the AMI"
+  type        = string
+  default     = "us-east-1"
 }
