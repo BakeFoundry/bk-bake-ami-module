@@ -21,9 +21,7 @@ variable "ami_os_type" {
   default     = "Linux"
 
   validation {
-    condition     = contains(["Linux", "Windows"], var.os_type)
+    condition     = contains(["Linux", "Windows"], var.ami_os_type)
     error_message = "The os_type must be either Linux or Windows."
   }
 }
-
-

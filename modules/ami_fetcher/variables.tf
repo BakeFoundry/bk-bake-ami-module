@@ -25,4 +25,3 @@ variable "os_type" {
     error_message = "The os_type must be either Linux or Windows."
   }
 }
-

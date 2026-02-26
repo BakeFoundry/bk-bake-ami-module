@@ -53,24 +53,45 @@ flowchart TD
 
 Fetches the latest AMI ID from AWS based on a set of filters. Supports both Linux and Windows AMIs.
 
-#### Input Variables
 
-| Variable | Description | Type | Default | Required |
-|---|---|---|---|---|
-| `ami_name` | Name glob pattern for the AMI (e.g. `al2023-ami-2023*`) | `string` | — | ✅ Yes |
-| `ami_owner` | AWS owner ID or alias (e.g. `amazon`) | `string` | `"amazon"` | No |
-| `ami_architecture` | CPU architecture (`x86_64` or `arm64`) | `string` | `"x86_64"` | No |
-| `ami_os_type` | Operating system (`Linux` or `Windows`) | `string` | `"Linux"` | No |
+## Requirements
 
-#### Outputs
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
 
-| Output | Description |
-|---|---|
-| `ami_id` | The ID of the selected AMI |
-| `ami_name` | The name of the selected AMI |
-| `ami_arn` | The ARN of the selected AMI |
+## Providers
+
+No providers.
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_ami_fetcher"></a> [ami\_fetcher](#module\_ami\_fetcher) | ./modules/ami_fetcher | n/a |
+
+## Resources
+
+No resources.
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_ami_architecture"></a> [ami\_architecture](#input\_ami\_architecture) | The architecture of the AMI (e.g., x86\_64 or arm64) | `string` | `"x86_64"` | no |
+| <a name="input_ami_name"></a> [ami\_name](#input\_ami\_name) | The name pattern for the AMI (e.g., al2023-ami-2023*-kernel-6.1-x86\_64) | `string` | n/a | yes |
+| <a name="input_ami_os_type"></a> [ami\_os\_type](#input\_ami\_os\_type) | The operating system type (Linux or Windows) | `string` | `"Linux"` | no |
+| <a name="input_ami_owner"></a> [ami\_owner](#input\_ami\_owner) | The owner ID or alias for the AMI (e.g., amazon) | `string` | `"amazon"` | no |
+
+## Outputs
+
+No outputs.
+
+No outputs.
 
 ---
+
 
 ## Usage
 
@@ -129,7 +150,9 @@ module "ami_fetcher" {
 
 ### Pre-commit Hooks
 
-This project uses `pre-commit` to ensure code quality.
+This project uses `pre-commit` to ensure code quality, formatting (`terraform fmt`), and security scanning (`checkov`).
+
+**Prerequisites:** Docker must be running locally, as the hooks execute inside isolated containers.
 
 ```bash
 pre-commit install

@@ -10,7 +10,7 @@ crash.log
 crash.log.*
 
 # Exclude all .tfvars files, which are likely to contain sensitive data, such as
-# password, private keys, and other secrets. These should not be part of version 
+# password, private keys, and other secrets. These should not be part of version
 # control as they are data based configuration files and not main configuration files.
 *.tfvars
 *.tfvars.json

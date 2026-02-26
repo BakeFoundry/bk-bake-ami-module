@@ -4,12 +4,12 @@ data "aws_ami" "selected" {
 
   filter {
     name   = "name"
-    values = [var.ami_name]
+    values = [var.ami_name_filter]
   }
 
   filter {
     name   = "architecture"
-    values = [var.ami_architecture]
+    values = [var.architecture]
   }
 
   filter {
@@ -24,6 +24,6 @@ data "aws_ami" "selected" {
 
   filter {
     name   = "platform-details"
-    values = [var.ami_os_type == "Windows" ? "Windows" : "Linux/UNIX"]
+    values = [var.os_type == "Windows" ? "Windows" : "Linux/UNIX"]
   }
 }
