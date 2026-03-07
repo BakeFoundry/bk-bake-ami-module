@@ -14,7 +14,7 @@ resource "null_resource" "packer_build" {
         -var "aws_region=${var.aws_region}" \
         -var "instance_type=${var.instance_type}" \
         -var "ssh_username=${var.ssh_username}" \
-        -var "baking_recipe_playbook=${var.baking_recipe_playbook}" \
+        -var "baking_recipe_playbook=${abspath(var.baking_recipe_playbook)}" \
         .
     EOT
     working_dir = "${path.module}/packer"
