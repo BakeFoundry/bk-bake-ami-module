@@ -1,26 +1,26 @@
 # =============================================================================
 # Terraform Tests: ami_builder module
 # =============================================================================
-# Tests the ami_builder submodule in isolation using `plan` command only,
-# since actual Packer builds require AWS credentials and running instances.
+# Tests the ami_builder submodule using `apply` to verify the full Packer
+# build runs and produces a valid AMI.
 #
 # These tests verify:
-#   - The module initializes correctly with valid inputs
-#   - Variable validation and defaults work as expected
-#   - The null_resource is properly configured with correct triggers
+#   - The module initializes and applies successfully
+#   - Packer builds a new AMI from the source AMI
+#   - The baked AMI ID is valid and starts with "ami-"
 #
+# Prerequisites: AWS credentials and Packer must be available
 # Run with: terraform test
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Test: Module initializes with all required variables
+# Test: Full AMI build produces a valid baked AMI
 # -----------------------------------------------------------------------------
-# Verifies the ami_builder module can be planned successfully when all
-# required variables are provided. Uses plan-only mode since the actual
-# Packer build cannot run without AWS credentials.
+# Applies the ami_builder module to actually run Packer and create a new AMI.
+# Verifies the triggers are correct and the resulting AMI ID is valid.
 # -----------------------------------------------------------------------------
-run "builder_initializes_with_valid_inputs" {
-  command = plan
+run "builder_creates_ami" {
+  command = apply
 
   module {
     source = "./modules/ami_builder"

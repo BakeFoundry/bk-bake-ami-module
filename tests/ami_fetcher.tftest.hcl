@@ -21,7 +21,7 @@ run "fetch_amazon_linux_ami" {
   }
 
   variables {
-    ami_name         = "al2023-ami-2023*-kernel-6.1-x86_64"
+    ami_name         = "al2023-ami-2023.*-kernel-6.1-x86_64"
     ami_owner        = "amazon"
     ami_architecture = "x86_64"
     ami_os_type      = "Linux"
