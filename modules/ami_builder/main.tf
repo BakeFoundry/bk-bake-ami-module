@@ -29,5 +29,18 @@ data "local_file" "packer_manifest" {
 locals {
   manifest     = jsondecode(data.local_file.packer_manifest.content)
   baked_ami    = local.manifest.builds[length(local.manifest.builds) - 1]
-  baked_ami_id = local.baked_ami.artifact_id
+  baked_ami_id = element(split(":", local.baked_ami.artifact_id), 1)
+}
+
+# Deregister the baked AMI on destroy (e.g., during terraform test teardown)
+resource "null_resource" "ami_cleanup" {
+  triggers = {
+    baked_ami_id = local.baked_ami_id
+    aws_region   = var.aws_region
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "aws ec2 deregister-image --image-id ${self.triggers.baked_ami_id} --region ${self.triggers.aws_region}"
+  }
 }
