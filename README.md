@@ -104,7 +104,8 @@ bk-bake-ami-module/
 │       └── test_bake.yml                # Test Ansible playbook for CI
 └── .github/
     └── workflows/
-        └── ci.yml                       # CI: pre-commit + terraform test
+        ├── ci.yml                       # CI: pre-commit + terraform test
+        └── notify-pr.yml                # PR Notifications: Discord webhook
 ```
 
 ---
@@ -274,3 +275,7 @@ flowchart LR
     C1 --> C2["terraform validate"]
     C2 --> C3["terraform test"]
 ```
+
+### PR Notifications
+
+When a Pull Request is opened, synchronized, or marked ready for review, the `notify-pr.yml` workflow triggers. It uses the `BakeFoundry/bk-bake-pr-reviewes` action to send a notification to a Discord channel via webhook.
