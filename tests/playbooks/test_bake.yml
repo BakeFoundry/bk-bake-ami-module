@@ -1,0 +1,60 @@
+---
+# =============================================================================
+# Test Ansible Playbook for AMI Baking
+# =============================================================================
+# A minimal playbook used by Terraform tests to validate the ami_builder
+# module's Packer integration. It performs basic setup tasks that any
+# baked AMI would typically need.
+#
+# Usage: Passed as `baking_recipe_playbook` variable to the ami_builder module
+# =============================================================================
+
+- name: Bake AMI - Test Playbook
+  hosts: all
+  become: true
+
+  vars:
+    app_name: "{{ application_name | default('test-app') }}"
+
+  tasks:
+    # -- System Updates --
+    - name: Update system packages
+      ansible.builtin.yum:
+        name: "*"
+        state: latest
+      when: ansible_os_family == "RedHat"
+
+    - name: Update system packages (Debian)
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: true
+      when: ansible_os_family == "Debian"
+
+    # -- Application Directory Setup --
+    - name: Create application directory
+      ansible.builtin.file:
+        path: "/opt/{{ app_name }}"
+        state: directory
+        mode: "0755"
+
+    # -- Verification Marker --
+    - name: Write build metadata file
+      ansible.builtin.copy:
+        content: |
+          app_name={{ app_name }}
+          build_time={{ ansible_date_time.iso8601 }}
+          ami_bake=success
+        dest: "/opt/{{ app_name }}/build-info.txt"
+        mode: "0644"
+
+    - name: Verify build metadata was written
+      ansible.builtin.stat:
+        path: "/opt/{{ app_name }}/build-info.txt"
+      register: build_info
+
+    - name: Assert build metadata exists
+      ansible.builtin.assert:
+        that:
+          - build_info.stat.exists
+        fail_msg: "Build metadata file was not created"
+        success_msg: "Build metadata file created successfully"
