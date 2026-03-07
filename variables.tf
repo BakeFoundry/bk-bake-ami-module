@@ -31,3 +31,13 @@ variable "aws_region" {
   type        = string
   default     = "us-east-1"
 }
+
+variable "baking_recipe_playbook" {
+  description = "The baking recipe playbook to use for baking the AMI"
+  type        = string
+}
+
+variable "application_name" {
+  description = "The name of the application to bake"
+  type        = string
+}
