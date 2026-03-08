@@ -15,6 +15,7 @@ module "ami_builder" {
   baking_recipe_playbook = var.baking_recipe_playbook
   application_name       = var.application_name
   aws_region             = var.aws_region
+  version_tag            = var.version_tag
 
   # Ensure ami_fetcher completes before ami_builder starts
   depends_on = [module.ami_fetcher]

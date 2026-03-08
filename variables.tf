@@ -41,3 +41,9 @@ variable "application_name" {
   description = "The name of the application to bake"
   type        = string
 }
+
+variable "version_tag" {
+  description = "The version tag to append to the baked AMI name"
+  type        = string
+  default     = ""
+}

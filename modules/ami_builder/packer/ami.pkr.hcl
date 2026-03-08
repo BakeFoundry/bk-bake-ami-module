@@ -89,6 +89,14 @@ variable "baking_recipe_playbook" {
   description = "Path to the Ansible playbook for baking the AMI"
 }
 
+# The version tag to append to the baked AMI name
+# Example: "v1.2.3"
+variable "version_tag" {
+  type        = string
+  description = "The version tag to append to the baked AMI name"
+  default     = ""
+}
+
 # -----------------------------------------------------------------------------
 # Locals
 # -----------------------------------------------------------------------------
@@ -99,7 +107,8 @@ variable "baking_recipe_playbook" {
 # Format:          {app_name}-{YYYY}{MM}{DD}{HH}{mm}{ss}
 # -----------------------------------------------------------------------------
 locals {
-  ami_name = "${var.application_name}-${formatdate("YYYYMMDDHHmmss", timestamp())}"
+  ami_name_suffix = var.version_tag != "" ? "-${var.version_tag}" : ""
+  ami_name        = "${var.application_name}-${formatdate("YYYYMMDDHHmmss", timestamp())}${local.ami_name_suffix}"
 }
 
 # -----------------------------------------------------------------------------
