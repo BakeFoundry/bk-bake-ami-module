@@ -3,6 +3,7 @@ resource "null_resource" "packer_build" {
     source_ami_id          = var.source_ami_id
     baking_recipe_playbook = var.baking_recipe_playbook
     application_name       = var.application_name
+    version_tag            = var.version_tag
   }
 
   provisioner "local-exec" {
@@ -15,6 +16,7 @@ resource "null_resource" "packer_build" {
         -var "instance_type=${var.instance_type}" \
         -var "ssh_username=${var.ssh_username}" \
         -var "baking_recipe_playbook=${abspath(var.baking_recipe_playbook)}" \
+        -var "version_tag=${var.version_tag}" \
         .
     EOT
     working_dir = "${path.module}/packer"

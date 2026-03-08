@@ -35,3 +35,9 @@ variable "ssh_username" {
   type        = string
   default     = "ec2-user"
 }
+
+variable "version_tag" {
+  description = "The version tag to append to the baked AMI name"
+  type        = string
+  default     = ""
+}

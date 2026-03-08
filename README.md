@@ -170,6 +170,7 @@ flowchart TD
 | `ami_os_type` | Operating system type (`Linux` or `Windows`) | `string` | `"Linux"` | no |
 | `aws_region` | AWS region for fetching and building AMIs | `string` | `"us-east-1"` | no |
 | `application_name` | Application name (used in baked AMI naming) | `string` | — | **yes** |
+| `version_tag` | Version tag to append to the baked AMI name (e.g., `v1.2.3`) | `string` | `""` | no |
 | `baking_recipe_playbook` | Path to the Ansible playbook for baking | `string` | — | **yes** |
 
 ## Outputs
