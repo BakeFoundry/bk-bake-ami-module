@@ -17,6 +17,4 @@ module "ami_builder" {
   aws_region             = var.aws_region
   version_tag            = var.version_tag
 
-  # Ensure ami_fetcher completes before ami_builder starts
-  depends_on = [module.ami_fetcher]
 }
