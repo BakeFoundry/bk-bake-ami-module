@@ -132,6 +132,16 @@ source "amazon-ebs" "baked_ami" {
   tags = {
     Name        = local.ami_name
     Application = var.application_name
+    Version     = var.version_tag
+    BuiltBy     = "packer"
+    SourceAMI   = var.source_ami_id
+  }
+
+  # Tags applied to the EBS snapshot backing the AMI
+  snapshot_tags = {
+    Name        = local.ami_name
+    Application = var.application_name
+    Version     = var.version_tag
     BuiltBy     = "packer"
     SourceAMI   = var.source_ami_id
   }
