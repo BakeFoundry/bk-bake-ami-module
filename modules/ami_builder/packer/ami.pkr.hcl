@@ -107,8 +107,7 @@ variable "version_tag" {
 # Format:          {app_name}-{YYYY}{MM}{DD}{HH}{mm}{ss}
 # -----------------------------------------------------------------------------
 locals {
-  ami_name_suffix = var.version_tag != "" ? "-${var.version_tag}" : ""
-  ami_name        = "${var.application_name}-${formatdate("YYYYMMDDHHmmss", timestamp())}${local.ami_name_suffix}"
+  ami_name = "${var.application_name}-${var.version_tag}"
 }
 
 # -----------------------------------------------------------------------------
@@ -133,8 +132,6 @@ source "amazon-ebs" "baked_ami" {
     Name        = local.ami_name
     Application = var.application_name
     Version     = var.version_tag
-    BuiltBy     = "packer"
-    SourceAMI   = var.source_ami_id
   }
 
   # Tags applied to the EBS snapshot backing the AMI
@@ -142,8 +139,6 @@ source "amazon-ebs" "baked_ami" {
     Name        = local.ami_name
     Application = var.application_name
     Version     = var.version_tag
-    BuiltBy     = "packer"
-    SourceAMI   = var.source_ami_id
   }
 }
 

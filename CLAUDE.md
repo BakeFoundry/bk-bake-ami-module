@@ -21,6 +21,10 @@ terraform fmt -recursive -check .
 # Run all tests (9 cases across 3 files; ami_builder tests create real AWS resources)
 terraform test
 
+# Run a single test file
+terraform test -filter=tests/ami_fetcher.tftest.hcl
+terraform test -filter=tests/integration.tftest.hcl
+
 # Pre-commit (requires Docker running)
 pre-commit install
 pre-commit run --all-files
@@ -31,6 +35,12 @@ pre-commit run --all-files
 - **Root module** (`main.tf`): passes variables to `ami_fetcher`, feeds its output `ami_id` into `ami_builder`.
 - **`modules/ami_fetcher`**: `aws_ami` data source with filters (name pattern, owner, architecture, OS). Plan-only — no resources created.
 - **`modules/ami_builder`**: `null_resource` running `packer init && packer build` via `local-exec`. Packer template lives at `modules/ami_builder/packer/ami.pkr.hcl` (amazon-ebs builder + Ansible provisioner). After build, parses `packer-manifest.json` to extract the baked AMI ID. A destroy-time provisioner deregisters the AMI.
+
+## Key Design Constraints
+
+- **`ami_builder` variables not exposed at root**: `instance_type` (default `t3.micro`) and `ssh_username` (default `ec2-user`) are configurable inside `ami_builder` but the root module does not pass them through. Callers needing to override them must use the submodule directly.
+- **`packer-manifest.json` must exist for destroy**: `ami_cleanup`'s destroy-time provisioner reads `local.baked_ami_id` from the manifest via `locals`. If the manifest is absent (e.g., fresh clone), `terraform destroy` will fail. The manifest is written to `modules/ami_builder/packer/packer-manifest.json` and is gitignored.
+- **AMI ID extraction**: `artifact_id` in the manifest has the form `region:ami-xxx`. The baked AMI ID is extracted with `element(split(":", artifact_id), 1)`.
 
 ## Testing
 
